@@ -1,12 +1,17 @@
 export const navItems = [
   {
     idx: 0,
-    item: "About",
-    href: "/about",
+    item: "Home",
+    href: "/",
   },
   {
     idx: 1,
-    item: "Contact",
-    href: "/contact",
+    item: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    idx: 1,
+    item: "Admin",
+    href: "/admin",
   },
 ];

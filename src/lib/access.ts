@@ -1,10 +1,10 @@
 export const protectedRoutes = [
   {
     path: "/dashboard",
-    allowedRoles: ["user"],
+    allowedRoles: ["USER","ADMIN"],
   },
   {
     path: "/admin",
-    allowedRoles: ["admin"],
+    allowedRoles: ["ADMIN"],
   },
 ];

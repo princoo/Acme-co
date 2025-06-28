@@ -1,8 +1,35 @@
 import UserInfo from "@/components/UserInfo";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { PiUsersLight,PiShieldThin } from "react-icons/pi";
+import { PiUsersLight, PiShieldThin } from "react-icons/pi";
+import { authConfig } from "../../../auth.config";
+import type { GetServerSidePropsContext } from "next";
 
-
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authConfig);
+  console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  const allowedRoles = ["USER", "ADMIN"];
+  const userRole = session.user?.role;
+  if (!allowedRoles.includes(userRole)) {
+    return {
+      redirect: {
+        destination: "/unauthorized",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
+}
 export default function index() {
   return (
     <div className="px-32 py-6">

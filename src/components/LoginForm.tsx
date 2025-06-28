@@ -7,8 +7,13 @@ import { LoginSchema } from "@/lib/utils/AuthSchema";
 import Button from "./ui/Button";
 import AuthMethods from "./AuthMethods";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const [error, setErrorMsg] = useState("");
   const {
     register,
     handleSubmit,
@@ -16,19 +21,32 @@ export default function LoginForm() {
   } = useForm<LoginPayload>({
     resolver: zodResolver(LoginSchema),
   });
-  const onSubmit = (data: LoginPayload) => {
-    console.log(data);
+  const onSubmit = async (data: LoginPayload) => {
+    const { email, password } = data;
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (res?.error) {
+      setErrorMsg("Invalid email or password");
+    } else {
+      router.push("/");
+    }
   };
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="mt-6 flex flex-col gap-5"
     >
+      {error && <p className="text-red-500">{error}</p>}
       <FormField label="Email" error={errors.email?.message}>
         <FormInput
           {...register("email")}
           placeholder="Alexei@gmail.com"
           error={!!errors.email}
+          name="email"
         />
       </FormField>
       <FormField label="Password" error={errors.password?.message}>
@@ -36,6 +54,8 @@ export default function LoginForm() {
           {...register("password")}
           placeholder="*********"
           error={!!errors.password}
+          type="password"
+          name="password"
         />
       </FormField>
       <Link

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { PiGithubLogo } from "react-icons/pi";
 import { RiGoogleLine } from "react-icons/ri";
@@ -13,6 +13,7 @@ export default function AuthMethods() {
         size="large"
         type="button"
         className="flex items-center justify-center gap-2"
+        onClick={() => signIn("github", { callbackUrl: "/" })}
       >
         <PiGithubLogo className="text-black" size={20} />{" "}
         <span className="text-black">Continue with GitHub</span>
@@ -22,7 +23,7 @@ export default function AuthMethods() {
         size="large"
         type="button"
         className="flex items-center justify-center gap-2"
-        onClick={() => signIn("google",{callbackUrl: "/"})}
+        onClick={() => signIn("google", { callbackUrl: "/" })}
       >
         <RiGoogleLine className="text-black" size={20} />{" "}
         <span className="text-black">Continue with Google</span>

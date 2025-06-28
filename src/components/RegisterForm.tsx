@@ -9,6 +9,7 @@ import { supabase } from "@/lib/superbase";
 import Button from "./ui/Button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { makeRole } from "@/lib/utils/MakeRole";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -21,13 +22,22 @@ export default function RegisterForm() {
     resolver: zodResolver(RegisterSchema),
   });
   const onSubmit = async (data: RegisterPayload) => {
-    console.log(data);
     const { email, password, fullName } = data;
+    const role = makeRole(email);
     const { data: response, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { fullName } },
+      options: { data: { fullName, role } },
     });
+
+    if (response.user) {
+      const role = makeRole(email);
+      await supabase.from("profiles").insert({
+        id: response.user.id,
+        full_name: fullName,
+        role,
+      });
+    }
     if (error) {
       setError(error.message);
     } else {
@@ -59,6 +69,7 @@ export default function RegisterForm() {
           {...register("password")}
           placeholder="*********"
           error={!!errors.password}
+          type="password"
         />
       </FormField>
       <FormField
@@ -69,6 +80,7 @@ export default function RegisterForm() {
           {...register("confirmPassword")}
           placeholder="*********"
           error={!!errors.confirmPassword}
+          type="password"
         />
       </FormField>
       <Button variant="primary" size="large" type="submit">

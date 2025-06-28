@@ -3,7 +3,6 @@ import React from "react";
 import AuthActions from "./AuthActions";
 import Link from "next/link";
 import UserAvatar from "./UserAvatar";
-import LogOut from "./LogOut";
 
 export default function Navbar() {
   return (
@@ -18,7 +17,6 @@ export default function Navbar() {
           ))}
           <AuthActions />
           <UserAvatar />
-          <LogOut />
         </ul>
       </div>
     </div>
