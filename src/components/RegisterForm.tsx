@@ -5,13 +5,15 @@ import { FormField } from "./ui/FormField";
 import { FormInput } from "./ui/FormInput";
 import { RegisterPayload } from "@/types/Auth";
 import { RegisterSchema } from "@/lib/utils/AuthSchema";
-import { supabase } from "@/lib/superbase";
 import Button from "./ui/Button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { makeRole } from "@/lib/utils/MakeRole";
+import { addProfile, registerUser } from "@/lib/auth";
+import ErrorDiv from "./ui/ErrorDiv";
 
 export default function RegisterForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("");
   const {
@@ -22,34 +24,31 @@ export default function RegisterForm() {
     resolver: zodResolver(RegisterSchema),
   });
   const onSubmit = async (data: RegisterPayload) => {
+    setIsLoading(true);
+    setError("");
     const { email, password, fullName } = data;
     const role = makeRole(email);
-    const { data: response, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { fullName, role } },
-    });
 
-    if (response.user) {
-      const role = makeRole(email);
-      await supabase.from("profiles").insert({
-        id: response.user.id,
-        full_name: fullName,
-        role,
-      });
-    }
-    if (error) {
-      setError(error.message);
-    } else {
+    try {
+      const response = await registerUser({ email, password, fullName, role });
+      if (response.user) {
+        await addProfile(response.user, fullName, role);
+      }
       router.push("/login");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="mt-6 flex flex-col gap-5"
     >
-      {error && <p>{error}</p>}
+      {error && <ErrorDiv error={error} />}
       <FormField label="Full name" error={errors.fullName?.message}>
         <FormInput
           {...register("fullName")}
@@ -83,8 +82,8 @@ export default function RegisterForm() {
           type="password"
         />
       </FormField>
-      <Button variant="primary" size="large" type="submit">
-        Sign up
+      <Button variant="primary" size="large" type="submit" disabled={isLoading}>
+        {isLoading ? "Signing up..." : "Sign up"}
       </Button>
     </form>
   );

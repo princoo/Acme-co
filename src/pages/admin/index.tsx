@@ -1,31 +1,16 @@
-import type { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
-import { authConfig } from "../../../auth.config";
+import { withAuthSSR } from "@/lib/WithAuthSSR";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authConfig);
-  if (!session) {
+export const getServerSideProps = withAuthSSR(
+  async (context, session) => {
     return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
+      props: {
+        session,
       },
     };
-  }
-  const allowedRoles = ["ADMIN"];
-  const userRole = session.user?.role;
-  if (!allowedRoles.includes(userRole)) {
-    return {
-      redirect: {
-        destination: "/unauthorized",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-}
+  },
+  { allowedRoles: ["ADMIN"] }
+);
+
 export default function index() {
   return (
     <div className="px-32 py-6">

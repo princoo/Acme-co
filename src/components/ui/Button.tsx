@@ -16,15 +16,14 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   ...props
 }) => {
-  const baseStyles =
-    "text-sm cursor-pointer font-semibold w-full rounded-full";
+  const baseStyles = "text-sm cursor-pointer font-semibold w-full rounded-full";
 
   const sizeStyles = {
     small: "text-sm px-3 py-1.5",
     medium: "text-base px-3 py-3",
     large: "text-lg p-2",
   };
-  const disabledStyles = disabled && "bg-secondary/40 cursor-not-allowed";
+  // const disabledStyles = disabled && "bg-secondary/40 cursor-not-allowed hover:bg-secondary/40 text-black";
 
   const variantStyles = {
     primary: "bg-primary text-white hover:bg-primary/80",
@@ -32,16 +31,22 @@ const Button: React.FC<ButtonProps> = ({
     outline: "bg-[#C2E6FF] text-black hover:bg-primary/20",
   };
 
-  const combined = clsx(
-    baseStyles,
-    sizeStyles[size],
-    variantStyles[variant],
-    disabledStyles,
-    className
-  );
+const combined = clsx(
+  baseStyles,
+  sizeStyles[size],
+  disabled
+    ? "bg-secondary/40 cursor-not-allowed text-black"
+    : variantStyles[variant],
+  className
+);
+
 
   return (
-    <button className={combined} {...props} disabled={disabled}>
+    <button
+      className={combined}
+      {...props}
+      disabled={disabled}
+    >
       {children}
     </button>
   );

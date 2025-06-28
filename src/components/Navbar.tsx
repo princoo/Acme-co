@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <div className="flex justify-between items-center py-3 px-10 border-b-2 border-secondary">
       <h1 className="text-lg font-bold">Acme Co</h1>
-      <div className="flex">
+      <div className="flex gap-6">
         <ul className="flex gap-6 items-center text-sm">
           {navItems.map((item) => (
             <Link key={item.idx} href={item.href}>
@@ -16,8 +16,8 @@ export default function Navbar() {
             </Link>
           ))}
           <AuthActions />
-          <UserAvatar />
         </ul>
+          <UserAvatar />
       </div>
     </div>
   );

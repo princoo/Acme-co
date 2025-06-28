@@ -1,35 +1,18 @@
 import UserInfo from "@/components/UserInfo";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { PiUsersLight, PiShieldThin } from "react-icons/pi";
-import { authConfig } from "../../../auth.config";
-import type { GetServerSidePropsContext } from "next";
+import { withAuthSSR } from "@/lib/WithAuthSSR";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authConfig);
-  console.log(session);
-  if (!session) {
+export const getServerSideProps = withAuthSSR(
+  async (context, session) => {
     return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
+      props: {
+        session,
       },
     };
-  }
-  const allowedRoles = ["USER", "ADMIN"];
-  const userRole = session.user?.role;
-  if (!allowedRoles.includes(userRole)) {
-    return {
-      redirect: {
-        destination: "/unauthorized",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-}
+  },
+  { allowedRoles: ["USER","ADMIN"] }
+);
 export default function index() {
   return (
     <div className="px-32 py-6">

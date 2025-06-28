@@ -19,13 +19,13 @@ export default function UserAvatar() {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              {session.user?.name?.charAt(0)}
+              {session.user?.name?.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
       </div>
       <div>
-        <p className="text-xs">{session.user.name}</p>
+        <p className="text-xs capitalize">{session.user.name}</p>
         <p className="text-xs text-gray-secondary">{session.user.role}</p>
       </div>
     </div>
