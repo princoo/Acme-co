@@ -10,7 +10,7 @@ export const navItems = [
     href: "/dashboard",
   },
   {
-    idx: 1,
+    idx: 2,
     item: "Admin",
     href: "/admin",
   },

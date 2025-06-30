@@ -14,7 +14,7 @@ export default function Hero() {
         <h1 className="text-5xl font-bold text-white">Welcome to Acme Co</h1>
         <p className="text-sm mb-8 text-white">Your friendly reminder</p>
         <div>
-        <AuthActions />
+          <AuthActions />
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ export default function AuthMethods() {
         className="flex items-center justify-center gap-2"
         onClick={() => signIn("github", { callbackUrl: "/" })}
       >
-        <PiGithubLogo className="text-black" size={20} />{" "}
+        <PiGithubLogo className="text-black" size={20} />
         <span className="text-black">Continue with GitHub</span>
       </Button>
       <Button
@@ -25,7 +25,7 @@ export default function AuthMethods() {
         className="flex items-center justify-center gap-2"
         onClick={() => signIn("google", { callbackUrl: "/" })}
       >
-        <RiGoogleLine className="text-black" size={20} />{" "}
+        <RiGoogleLine className="text-black" size={20} />
         <span className="text-black">Continue with Google</span>
       </Button>
     </>
